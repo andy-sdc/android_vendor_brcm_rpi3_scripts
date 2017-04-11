@@ -45,6 +45,7 @@ OPTIONS:
   -a  Device architecture: x86, x86_64, arm, arm64
   -h  Show help
   -i  IP address for ADB
+  -v  Variant of OpenGApps package: stock, full, mini, micro, pico, tvstock
 EOF
 }
 
@@ -228,11 +229,12 @@ create_script()
 
 
 # save the passed options
-while getopts ":i:a:h" flag; do
+while getopts ":i:a:h:v" flag; do
 case $flag in
     "i") ADB_ADDRESS="$OPTARG" ;;
     "a") ARCHITECTURE="$OPTARG" ;;
     "h") SHOW_HELP=true ;;
+    "v") VARIANT="$OPTARG" ;;
     *)
          echo ""
          echo "ERR: invalid option (-$flag $OPTARG)"
@@ -244,6 +246,12 @@ done
 
 if [[ "$ARCHITECTURE" != "x86" && "$ARCHITECTURE" != "x86_64" && "$ARCHITECTURE" != "arm" && "$ARCHITECTURE" != "arm64" ]]; then
     echo "ERR: $ARCHITECTURE is not a valid architecture!";
+    show_help
+    exit 1
+fi
+
+if [[ "$VARIANT" != "stock" && "$VARIANT" != "full" && "$VARIANT" != "mini" && "$VARIANT" != "micro" && "$VARIANT" != "pico" && "$VARIANT" != "tvstock" ]]; then
+    echo "ERR: $VARIANT is not a supported OpenGApps variant!";
     show_help
     exit 1
 fi
